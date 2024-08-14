@@ -94,19 +94,17 @@ struct Node
 class Solution {
   public:
     // Function to return the diameter of a Binary Tree.
-    struct Info{
-        int h;
-        int d;
-    };
-    Info Find_diameter(Node *root){
-        if(!root) return {0,0};
-        
-        Info LP=Find_diameter(root->left);
-        Info RP=Find_diameter(root->right);
-        Info curr;
-        curr.h=max(LP.h,RP.h)+1;
-        curr.d=max(LP.d,max(RP.d,LP.h+RP.h+1));
-        return curr;
+    int Find_diameter(Node *root, int &diameter){
+        if (!root) return 0;
+        if (root->left == NULL && root->right == NULL) return 1;
+
+        int left_height = Find_diameter(root->left, diameter);
+        int right_height = Find_diameter(root->right, diameter);
+
+        int curr_diameter = left_height + right_height + 1;
+        diameter = max(diameter, curr_diameter);
+
+        return max(left_height, right_height) + 1;
     }
     /*int height(Node *root){
         if(!root) return 0;
@@ -115,9 +113,9 @@ class Solution {
         return max(LH,RH)+1;
     }*/
     int diameter(Node* root) {
-        //int diam=LH+RH+1;
-        Info curr =Find_diameter(root);
-        return curr.d;// Your code here
+       int diameter = 0;
+        Find_diameter(root, diameter);
+        return diameter;
     }
 };
 
